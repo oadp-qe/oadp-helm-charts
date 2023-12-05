@@ -1,0 +1,27 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+Run the following command to check the DPA status:
+
+    oc get dpa -n {{ .Values.namespace }} {{ .Release.Name }}-dpa -o yaml
+
+Run the following command to list all CRs managed by HELM:
+
+    cat /home/sbahar/manual-test/helm/oadp/resources-list | xargs -n 1 oc get -n {{ .Values.namespace }} --show-kind -l app.kubernetes.io/managed-by=Helm --ignore-not-found
+
+{{- if .Values.backup.enable }}
+
+Run the following command to get the latest backup manifest or the phase:
+
+    oc get backup {{ printf "b%d" (int .Values.backup.idx) }} -n {{ .Values.namespace }} -o yaml
+    oc get backup {{ printf "b%d" (int .Values.backup.idx) }} -n {{ .Values.namespace }} -o jsonpath='{.status.phase}'
+{{- end }}
+
+{{- if .Values.restore.enable }}
+
+Run the following commands to get the latest restore manifest or the phase:
+
+    oc get restore {{ printf "r%d" (int .Values.restore.idx) }} -n {{ .Values.namespace }} -o yaml
+    oc get restore {{ printf "r%d" (int .Values.restore.idx) }} -n {{ .Values.namespace }} -o jsonpath='{.status.phase}'
+{{- end }}

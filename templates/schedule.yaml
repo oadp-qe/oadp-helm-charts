@@ -1,0 +1,15 @@
+{{- if .Values.schedule.enable }}
+{{- $scheduleName := printf "s%d" (int .Values.schedule.idx) }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ $scheduleName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  schedule: {{ .Values.schedule.cronExp | quote }}
+  {{- if .Values.schedule.paused.enable }}
+  paused: {{ .Values.schedule.paused.bool }}
+  {{- end }}
+  template:
+    {{- include "backup.spec" . | indent 2}}
+{{- end }}

@@ -1,0 +1,4 @@
+.vscode/
+*.tgz
+*creds
+credentials/

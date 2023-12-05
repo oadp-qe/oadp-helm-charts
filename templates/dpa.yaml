@@ -1,0 +1,25 @@
+apiVersion: oadp.openshift.io/v1alpha1
+kind: DataProtectionApplication
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Name }}-dpa
+spec:
+  {{- include "oadp.dpa.backupImages" . | indent 2}}
+  configuration:
+    {{- include "oadp.dpa.nativeDm" . | indent 4 }}
+    {{- include "oadp.dpa.fs" . | indent 4 }}
+    {{ include "oadp.dpa.restic" . | indent 4 }}
+    velero:
+      {{- include "oadp.dpa.featureFlags" . | indent 6 }} 
+      {{- include "oadp.dpa.noDefaultBackupLocation" . | indent 6 }}
+      {{- include "dpa.spec.configuration.velero.args" . | indent 6 }}
+      defaultPlugins:
+        {{- include "oadp.dpa.defaultPlugins" . | indent 6 }}
+        {{- include "oadp.dpa.csi" . | indent 6 }}
+        {{- include "oadp.dpa.defaultPlugins.dm" . | indent 6 }}
+
+  {{- include "oadp.backupLocations" . | indent 2 }}
+        
+  {{- include "oadp.features.dm" . | indent 2 }}
+  {{- include "oadp.snapshotLocations" . | indent 2 }}
+  {{- include "dpa.spec.unsupportedOverrides" . | indent 2 }}

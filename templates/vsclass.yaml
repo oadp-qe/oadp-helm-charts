@@ -1,0 +1,3 @@
+{{ include "oadp.gcp.VolumeSnapshotClass" . }}
+
+{{ include "oadp.aws.VolumeSnapshotClass" . }}

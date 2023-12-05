@@ -1,0 +1,6 @@
+secrets
+dataprotectionapplications.oadp.openshift.io
+backups.velero.io
+restores.velero.io
+volumesnapshotclass
+

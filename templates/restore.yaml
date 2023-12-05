@@ -1,0 +1,17 @@
+{{- if .Values.restore.enable }}
+{{- $restoreName := printf "r%d" (int .Values.restore.idx) }}
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: {{ $restoreName }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  backupName: {{ .Values.restore.fromBackup }}
+  {{- include "restore.spec.excludedResources" . | indent 2 }}
+  restorePVs: {{ .Values.restore.restorePVs }}
+  {{- include "restore.spec.includeClusterResources" . | indent 2 }}
+  {{- include "restore.spec.existingResourcePolicy" . | indent 2 }}
+  {{- include "restore.spec.namespaceMapping" . | indent 2 }}
+{{- end }}   

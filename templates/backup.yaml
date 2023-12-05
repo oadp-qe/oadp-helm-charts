@@ -1,0 +1,32 @@
+{{- define "backup.spec"}}
+  {{- include "backup.spec.storageLocation" . | indent 2 }}
+  {{- include "backup.spec.ttl" . | indent 2 }}
+  {{- include "backup.spec.includedNamespaces" . | indent 2 }}
+  {{- include "oadp.backup.nativeDm" . | indent 2 }}
+  {{- include "oadp.backup.fs" . | indent 2 }}
+  {{- include "backup.spec.volumeSnapshotLocations" . | indent 2 }}
+  {{- include "backup.spec.includedResources" . | indent 2 }}
+  {{- include "backup.spec.includedClusterScopedResources" . | indent 2 }}
+  {{- include "backup.spec.includeClusterResources" . | indent 2 }}
+  {{- include "backup.spec.excludedResources" . | indent 2 }}
+  {{- include "backup.spec.includedNamespaceScopedResources" . | indent 2 }}
+  {{- include "backup.spec.resourcePolicy" . | indent 2 }}
+  {{- include "backup.spec.excludedClusterScopedResources" . | indent 2 }}
+  {{- include "backup.spec.excludedNamespaceScopedResources" . | indent 2 }}
+  {{- include "backup.spec.csiSnapshotTimeout" . | indent 2 }}
+  {{- include "backup.spec.labelSelector" . | indent 2 }}
+  {{- include "backup.spec.snapshotVolumes" . | indent 2 }}
+{{- end }}
+
+{{- if .Values.backup.enable }}
+{{- $backupName := printf "b%d" (int .Values.backup.idx) }}
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  annotations:
+    helm.sh/resource-policy: keep
+  name: {{ $backupName }}
+  namespace: {{ .Values.namespace }}
+spec:
+{{- include "backup.spec" . }}
+{{- end }}   

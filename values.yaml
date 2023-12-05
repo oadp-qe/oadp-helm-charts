@@ -1,0 +1,219 @@
+namespace: openshift-adp
+
+# DPA
+
+bsl:
+  bsls:
+  - bucket: miniobucket
+    provider: aws
+    default: true
+    credentials:
+      enable: true
+      name: main-bsl
+      createSecret:
+        enable: true
+        fileName: minio_creds
+        profile: minio
+      secretName: cloud-credentials
+      secretKey: cloud
+
+    # AWS URL https://s3-<region>.amazonaws.com
+    s3:
+      enable: true
+      url: minio-minio.apps.mtv85.rhos-psi.cnv-qe.rhood.us
+      protocol: http
+      noobaa: false
+      minio: true
+      aws: false
+    caCert:
+      enable: false
+
+vsl:
+  enable: false
+  vsls:
+  - provider: gcp
+    credentials:
+      enable: false
+      createSecret:
+        enable: true
+        fileName: vsl_creds
+      secretName: vsl-cloud-credentials-1
+      secretKey: service_account.json
+
+csi:
+  enable: true
+
+vsc:
+  enable: false
+  name: my-vsc
+  provider: aws
+  deletionPolicy: Retain
+
+fs:
+  enable: true
+  bool: true
+  restic: false
+  kopia: true
+  podConfig:
+    enable: false
+    env:
+      enable: true
+      envs:
+      - name: TZ
+        val: America/New_York
+    toleration:
+      enable: false
+      tolerations:
+      - key: node.kubernetes.io/unreachable
+        operator: Exists
+        effect: NoExecute
+
+ndm:
+  enable: false
+
+velero:
+  defaultPlugins:
+  - openshift
+  - aws
+  featureFlags:
+    enable: false
+    flags:
+    - no-secret
+  noDefaultBackupLocation:
+    enable: false
+  args:
+    enable: false
+    defaultBackupTtl:
+      enable: true
+      val: 300000000000
+    garbageCollectionFrequency:
+      enable: true
+      val: 100000000000
+
+backupImages:
+  enable: false
+  bool: true
+
+unsupportedOverrides:
+  enable: false
+  maps:
+  - key: csiPluginImageFqin
+    image: docker.io/sbahar619/velero-plugin-for-csi:main
+
+backup:
+  enable: true
+
+  # metadata
+  idx: 5
+
+  # spec
+  includedNamespaces:
+  - a1
+  storageLocation:
+    enable: false
+    name: main-bsl
+  nativeDm: true
+  fs: false
+  volumeSnapshotLocations: {}
+  includedNamespaceScopedResources: {}
+  excludedNamespaceScopedResources: {}
+  includedClusterScopedResources: {}
+  excludedClusterScopedResources: {}
+  includedResources: {}
+  excludedResources: {}
+  includeClusterResources:
+    enable: false
+    bool: true
+  labelSelector:
+    enable: false
+    matchLabels:
+      enable: true
+      labels:
+      - key: app
+        val: mysql
+  resourcePolicy:
+    enable: false
+    kind: configmap
+    name: rp-invalid
+  ttl:
+    enable: true
+    val: 720h0m0s
+  csiSnapshotTimeout:
+    enable: false
+    timeout: 0m1s
+  snapshotVolumes:
+    enable: false
+    bool: true
+
+restore:
+  enable: false
+
+  # metadata
+  idx: 2
+
+  # spec
+  fromBackup: b4
+  restorePVs: true
+  includeClusterResources:
+    enable: false
+    bool: false
+  existingResourcePolicy:
+    enable: false
+    policy: update
+  excludedResources:
+  - nodes
+  - events
+  - events.events.k8s.io
+  - backups.velero.io
+  - restores.velero.io
+  - resticrepositories.velero.io
+  namespaceMapping:
+    enable: false
+    maps:
+    - sourceNs: a1
+      targetNs: a8
+
+schedule:
+  enable: false
+
+  # metadata
+  idx: 1
+
+  # spec
+  cronExp: '*/1 * * * *'
+  paused:
+    enable: true
+    bool: true
+
+# 1.2
+
+restic:
+  enable: false
+
+dm:
+  enable: false
+  vsmPlugin: false
+  timeout:
+    enable: false
+    value: 2s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
