@@ -12,14 +12,14 @@ bsl:
       name: main-bsl
       createSecret:
         enable: true
-        fileName: minio_creds
-        profile: minio
+        fileName: default_creds
+        profile: default
       secretName: cloud-credentials
       secretKey: cloud
 
     # AWS URL https://s3-<region>.amazonaws.com
     s3:
-      enable: true
+      enable: false
       url: minio-minio.apps.mtv85.rhos-psi.cnv-qe.rhood.us
       protocol: http
       noobaa: false
@@ -50,7 +50,7 @@ vsc:
   deletionPolicy: Retain
 
 fs:
-  enable: true
+  enable: false
   bool: true
   restic: false
   kopia: true
@@ -101,10 +101,10 @@ unsupportedOverrides:
     image: docker.io/sbahar619/velero-plugin-for-csi:main
 
 backup:
-  enable: true
+  enable: false
 
   # metadata
-  idx: 5
+  idx: 1
 
   # spec
   includedNamespaces:
@@ -152,7 +152,7 @@ restore:
   idx: 2
 
   # spec
-  fromBackup: b4
+  fromBackup: b1
   restorePVs: true
   includeClusterResources:
     enable: false
